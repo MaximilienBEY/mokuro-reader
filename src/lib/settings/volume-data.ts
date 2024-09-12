@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 import { derived, get, writable } from 'svelte/store';
-import { settings, updateSetting, } from './settings';
+import { settings, updateSetting } from './settings';
+import { isActive } from "$lib/settings"
 import { zoomDefault } from '$lib/panzoom';
 import { page } from '$app/stores';
 import { manga, volume } from '$lib/catalog';
@@ -95,16 +96,18 @@ export function updateProgress(volume: string, progress: number, chars?: number,
 
 export function startCount(volume: string) {
   return setInterval(() => {
+    if (!get(isActive)) return
+    
     volumes.update((prev) => {
       return {
         ...prev,
         [volume]: {
           ...prev?.[volume],
-          timeReadInMinutes: prev?.[volume].timeReadInMinutes + 1
+          timeReadInMinutes: prev?.[volume].timeReadInMinutes + 1 / 60 // 1 second
         }
       };
     });
-  }, 60 * 1000)
+  }, 1000)
 }
 
 volumes.subscribe((volumes) => {

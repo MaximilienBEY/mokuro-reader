@@ -1,5 +1,6 @@
 <script lang="ts">
   import { startCount, volumeStats } from '$lib/settings';
+  import { parseTime } from "$lib/util/time";
 
   export let count: number | undefined;
   export let volumeId: string;
@@ -22,6 +23,6 @@
   on:click={onClick}
 >
   <p>
-    {active ? 'Active' : 'Paused'} | Minutes read: {$volumeStats?.timeReadInMinutes}
+    {active ? 'Active' : 'Paused'} | Minutes read: {parseTime($volumeStats?.timeReadInMinutes ?? 0)}
   </p>
 </button>

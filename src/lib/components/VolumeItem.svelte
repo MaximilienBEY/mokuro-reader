@@ -1,18 +1,21 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { deleteVolume, progress } from '$lib/settings';
+  import { deleteVolume, progress, volumes } from '$lib/settings';
   import type { Volume } from '$lib/types';
   import { promptConfirmation } from '$lib/util';
   import { ListgroupItem, Frame } from 'flowbite-svelte';
   import { CheckCircleSolid, TrashBinSolid } from 'flowbite-svelte-icons';
   import { goto } from '$app/navigation';
   import { db } from '$lib/catalog/db';
+  import { parseTime } from "$lib/util/time";
 
   export let volume: Volume;
 
   const { volumeName, mokuroData } = volume as Volume;
   const { title_uuid, volume_uuid } = mokuroData;
   const volName = decodeURI(volumeName);
+  const volStats = $volumes[volume_uuid];
+  const timeRead = volStats?.timeReadInMinutes || 0;
 
   $: currentPage = $progress?.[volume_uuid || 0] || 1;
   $: progressDisplay = `${
@@ -55,7 +58,13 @@
       >
         <div>
           <p class="font-semibold" class:text-white={!isComplete}>{volName}</p>
-          <p>{progressDisplay}</p>
+          <div class="flex gap-4">
+            <p>{progressDisplay}</p>
+            {#if volStats}
+              <p>Characters read: {volStats.chars}</p>
+              <p>Time read: {parseTime(timeRead)}</p>
+            {/if}
+          </div>
         </div>
         <div class="flex gap-2">
           <TrashBinSolid

@@ -7,7 +7,9 @@
   import { promptConfirmation, zipManga } from '$lib/util';
   import { page } from '$app/stores';
   import type { Volume } from '$lib/types';
-  import { deleteVolume, mangaStats, volumes } from '$lib/settings';
+  import { deleteVolume, isActive, mangaStats } from '$lib/settings';
+  import { parseTime } from "$lib/util/time";
+  import { onMount } from "svelte";
 
   function sortManga(a: Volume, b: Volume) {
     return a.mokuroData.volume.localeCompare(b.mokuroData.volume, undefined, {
@@ -41,6 +43,7 @@
       loading = await zipManga(manga);
     }
   }
+
 </script>
 
 <svelte:head>
@@ -54,7 +57,7 @@
         <div class="flex flex-col gap-0 sm:flex-row sm:gap-5">
           <p>Volumes: {$mangaStats.completed} / {manga.length}</p>
           <p>Characters read: {$mangaStats.chars}</p>
-          <p>Minutes read: {$mangaStats.timeReadInMinutes}</p>
+          <p>Minutes read: {parseTime($mangaStats.timeReadInMinutes ?? 0)}</p>
         </div>
       </div>
       <div class="sm:block flex-col flex gap-2">

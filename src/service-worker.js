@@ -31,11 +31,14 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
   // ignore POST requests etc
-  if (event.request.method !== 'GET') return;
+  if (
+    event.request.method !== 'GET' ||
+    url.origin !== self.location.origin
+  ) return;
 
   async function respond() {
-    const url = new URL(event.request.url);
     const cache = await caches.open(CACHE);
 
     // `build`/`files` can always be served from the cache
