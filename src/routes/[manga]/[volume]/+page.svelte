@@ -7,6 +7,7 @@
 
   const volumeId = $page.params.volume;
   let count: undefined | number = undefined;
+  let yomitanOpen = false;
 
   onMount(() => {
     if (!$volumes?.[volumeId]) {
@@ -19,19 +20,23 @@
     function updateFocus() {
       isActive.set(document.hasFocus());
     }
+    window.addEventListener("message", function(event) {
+      if (event.source !== window || event.data.type !== "YOMITAN") return
+      const type = event.data.event
+
+      if (type === "content") yomitanOpen = true
+      else if (type === "clear") yomitanOpen = false
+  });
 
     // Attach event listeners to track focus and blur events
     window.addEventListener('focus', () => {
       isActive.set(true);
     });
-
     window.addEventListener('blur', () => {
+      if (yomitanOpen) return
       isActive.set(false);
     });
-
-    document.addEventListener('visibilitychange', () => {
-      updateFocus();
-    });
+    document.addEventListener('visibilitychange', () => updateFocus());
 
     // Initialize the focus state
     updateFocus();

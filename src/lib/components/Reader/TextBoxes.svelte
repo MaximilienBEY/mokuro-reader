@@ -3,6 +3,7 @@
   import type { Page } from '$lib/types';
   import { settings } from '$lib/settings';
   import { imageToWebp, showCropper, updateLastCard } from '$lib/anki-connect';
+  import { onMount } from "svelte";
 
   export let page: Page;
   export let src: File;
@@ -47,9 +48,9 @@
 
   $: triggerMethod = $settings.ankiConnectSettings.triggerMethod || 'both';
 
-  async function onUpdateCard(lines: string[]) {
+  async function onUpdateCard(lines?: string[]) {
     if ($settings.ankiConnectSettings.enabled) {
-      const sentence = lines.join(' ');
+      const sentence = lines?.join(' ');
       if ($settings.ankiConnectSettings.cropImage) {
         showCropper(URL.createObjectURL(src), sentence);
       } else {
@@ -74,6 +75,35 @@
       onUpdateCard(lines);
     }
   }
+
+  let isCurrentPage = false
+  let pendingCreation = false
+  function onMiddleClick(event: MouseEvent) {
+    if (event.button !== 1) return
+    isCurrentPage = true
+  }
+  onMount(() => {
+    const handleClick = () => {
+      isCurrentPage = false
+    }
+    window.addEventListener("click", handleClick)
+
+    const handleEvent = (event: MessageEvent) => {
+      if (event.source !== window || event.data.type !== "YOMITAN") return
+      const type = event.data.event
+
+      if (type === "content") pendingCreation = true
+      else if (type === "clear") pendingCreation = false
+      else if (type == "card_added" && pendingCreation && isCurrentPage) {
+        onUpdateCard()
+      }
+    }
+    window.addEventListener("message", handleEvent)
+    return () => {
+      window.removeEventListener("click", handleClick)
+      window.removeEventListener("message", handleEvent)
+    }
+  })
 </script>
 
 {#each textBoxes as { fontSize, height, left, lines, top, width, writingMode }, index (`textBox-${index}`)}
@@ -91,6 +121,7 @@
     role="none"
     on:contextmenu={(e) => onContextMenu(e, lines)}
     on:dblclick={(e) => onDoubleTap(e, lines)}
+    on:auxclick={onMiddleClick}
     {contenteditable}
   >
     {#each lines as line}
