@@ -32,7 +32,7 @@
 
 {#if $volumeSettings[volumeId]}
   {#if $settings.showTimer}
-    <Timer bind:count {volumeId} />
+    <Timer />
   {/if}
   <Reader volumeSettings={$volumeSettings[volumeId]} />
 {/if}
