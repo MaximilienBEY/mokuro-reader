@@ -7,7 +7,6 @@
 
   const volumeId = $page.params.volume;
   let count: undefined | number = undefined;
-  let yomitanOpen = false;
 
   onMount(() => {
     if (!$volumes?.[volumeId]) {
@@ -16,33 +15,13 @@
 
     count = startCount(volumeId);
 
-
-    function updateFocus() {
-      isActive.set(document.hasFocus());
-    }
     window.addEventListener("message", function(event) {
       if (event.source !== window || event.data.source !== "YOMITAN") return
       const type = event.data.type
 
-      if (type === "visible") yomitanOpen = true
-      else if (type === "hidden") yomitanOpen = false
-      else if (type === "tab_changed" && yomitanOpen) {
-        isActive.set(false)
-      }
+      if (type === "window_active") isActive.set(true)
+      else if (type === "window_inactive") isActive.set(false)
   });
-
-    // Attach event listeners to track focus and blur events
-    window.addEventListener('focus', () => {
-      isActive.set(true);
-    });
-    window.addEventListener('blur', () => {
-      if (yomitanOpen) return
-      isActive.set(false);
-    });
-    document.addEventListener('visibilitychange', () => updateFocus());
-
-    // Initialize the focus state
-    updateFocus();
 
     return () => {
       clearInterval(count);
