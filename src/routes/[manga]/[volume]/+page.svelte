@@ -26,6 +26,9 @@
 
       if (type === "visible") yomitanOpen = true
       else if (type === "hidden") yomitanOpen = false
+      else if (type === "tab_changed" && yomitanOpen) {
+        isActive.set(false)
+      }
   });
 
     // Attach event listeners to track focus and blur events
