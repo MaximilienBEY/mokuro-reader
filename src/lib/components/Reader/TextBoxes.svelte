@@ -89,11 +89,11 @@
     window.addEventListener("click", handleClick)
 
     const handleEvent = (event: MessageEvent) => {
-      if (event.source !== window || event.data.type !== "YOMITAN") return
-      const type = event.data.event
+      if (event.source !== window || event.data.source !== "YOMITAN") return
+      const type = event.data.type
 
-      if (type === "content") pendingCreation = true
-      else if (type === "clear") pendingCreation = false
+      if (type === "visible") pendingCreation = true
+      else if (type === "hidden") pendingCreation = false
       else if (type == "card_added" && pendingCreation && isCurrentPage) {
         onUpdateCard()
       }

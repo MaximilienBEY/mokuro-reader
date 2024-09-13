@@ -21,11 +21,11 @@
       isActive.set(document.hasFocus());
     }
     window.addEventListener("message", function(event) {
-      if (event.source !== window || event.data.type !== "YOMITAN") return
-      const type = event.data.event
+      if (event.source !== window || event.data.source !== "YOMITAN") return
+      const type = event.data.type
 
-      if (type === "content") yomitanOpen = true
-      else if (type === "clear") yomitanOpen = false
+      if (type === "visible") yomitanOpen = true
+      else if (type === "hidden") yomitanOpen = false
   });
 
     // Attach event listeners to track focus and blur events
