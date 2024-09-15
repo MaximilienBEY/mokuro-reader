@@ -116,7 +116,8 @@ export async function processFiles(_files: File[]) {
   })
 
   for (const file of files) {
-    const { ext, filename, path } = getDetails(file);
+    const { ext, filename } = getDetails(file);
+    const path = getDetails(file).path.replaceAll("ガ", "ガ")
 
     if (ext === 'mokuro') {
       const mokuroData: Volume['mokuroData'] = JSON.parse(await file.text());

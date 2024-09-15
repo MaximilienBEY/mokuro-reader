@@ -12,7 +12,8 @@
     }
   }
 
-  function onClick() {
+  function onClick(e: MouseEvent) {
+    e.stopPropagation();
     input.click();
   }
 </script>

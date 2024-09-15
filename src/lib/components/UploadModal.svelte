@@ -129,9 +129,6 @@
         event.preventDefault();
         activeStyle = defaultStyle;
       }}
-      on:click={(event) => {
-        event.preventDefault();
-      }}
       defaultClass={activeStyle}
     >
       <svg
@@ -162,10 +159,7 @@
         <Spinner />
       {:else}
         <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-          Drag and drop / <FileUpload bind:files accept=".mokuro,.zip,.cbz" multiple
-            >choose files</FileUpload
-          > /
-          <FileUpload bind:files webkitdirectory>choose directory</FileUpload>
+          Drag and drop / <FileUpload bind:files>choose directory</FileUpload>
         </p>
       {/if}
     </Dropzone>
