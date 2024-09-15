@@ -117,7 +117,7 @@ export async function processFiles(_files: File[]) {
 
   for (const file of files) {
     const { ext, filename } = getDetails(file);
-    const path = getDetails(file).path.replaceAll("ガ", "ガ")
+    const path = getDetails(file).path.replaceAll("ガ", "ガ").replaceAll("ド", "ド")
 
     if (ext === 'mokuro') {
       const mokuroData: Volume['mokuroData'] = JSON.parse(await file.text());
@@ -149,6 +149,7 @@ export async function processFiles(_files: File[]) {
         let vol = ''
 
         Object.keys(volumes).forEach((key) => {
+          console.log(key, webkitRelativePath, webkitRelativePath.startsWith(key))
           if (webkitRelativePath.startsWith(key)) {
             vol = key
           }
