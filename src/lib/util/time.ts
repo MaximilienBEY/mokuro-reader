@@ -5,6 +5,5 @@ export const parseTime = (time: number) => {
   const minutes = Math.floor((time % 3600) / 60).toString().padStart(2, '0');
   const seconds = Math.floor(time % 60).toString().padStart(2, '0');
 
-  if (hours === '00') return `${minutes}:${seconds}`;
-  else return `${hours}:${minutes}:${seconds}`;
+  return `${hours}:${minutes}:${seconds}`;
 }
