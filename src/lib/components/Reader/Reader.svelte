@@ -256,7 +256,7 @@
   on:touchend={handlePointerUp}
 />
 <svelte:head>
-  <title>{volume?.mokuroData.volume || 'Volume'} - Page {index + 1}</title>
+  <title>{volume?.mokuroData.title} - {volume?.mokuroData.volume || 'Volume'} - Page {index + 1}</title>
 </svelte:head>
 {#if volume && pages}
   <QuickActions
