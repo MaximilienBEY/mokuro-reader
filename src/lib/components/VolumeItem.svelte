@@ -8,6 +8,7 @@
   import { goto } from '$app/navigation';
   import { db } from '$lib/catalog/db';
   import { parseTime } from "$lib/util/time";
+  import { getTotalVolumeChars } from '$lib/util/count-chars';
 
   export let volume: Volume;
 
@@ -16,6 +17,7 @@
   const volName = decodeURI(volumeName);
   const volStats = $volumes[volume_uuid];
   const timeRead = volStats?.timeReadInMinutes || 0;
+  const totalVolumeChars = getTotalVolumeChars(mokuroData.pages);
 
   $: currentPage = $progress?.[volume_uuid || 0] || 1;
   $: progressDisplay = `${
@@ -60,10 +62,10 @@
           <p class="font-semibold" class:text-white={!isComplete}>{volName}</p>
           <div class="flex gap-4">
             <p>{progressDisplay}</p>
-            {#if volStats}
-              <p>Characters read: {volStats.chars}</p>
+            <!-- {#if volStats} -->
+              <p>Characters read: {volStats?.chars ?? 0} / {totalVolumeChars}</p>
               <p>Time read: {parseTime(timeRead)}</p>
-            {/if}
+            <!-- {/if} -->
           </div>
         </div>
         <div class="flex gap-2">

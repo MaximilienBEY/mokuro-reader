@@ -37,3 +37,20 @@ export function getCharCount(pages: Page[], currentPage?: number) {
 
   return { charCount, lineCount };
 }
+
+export function getTotalVolumeChars(pages: Page[]) {
+  if (!pages || pages.length === 0) return 0;
+  
+  let totalChars = 0;
+  
+  for (const page of pages) {
+    const blocks = page.blocks;
+    blocks.forEach((block) => {
+      block.lines.forEach((line) => {
+        totalChars += countChars(line);
+      });
+    });
+  }
+  
+  return totalChars;
+}

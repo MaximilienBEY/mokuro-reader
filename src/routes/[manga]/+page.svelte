@@ -9,6 +9,7 @@
   import type { Volume } from '$lib/types';
   import { deleteVolume, isActive, mangaStats } from '$lib/settings';
   import { parseTime } from "$lib/util/time";
+  import { getTotalVolumeChars } from '$lib/util/count-chars';
   import { onMount } from "svelte";
 
   function sortManga(a: Volume, b: Volume) {
@@ -19,6 +20,8 @@
   }
 
   $: manga = $catalog?.find((item) => item.id === $page.params.manga)?.manga.sort(sortManga);
+
+  $: totalMangaChars = manga ? manga.reduce((total, volume) => total + getTotalVolumeChars(volume.mokuroData.pages), 0) : 0;
 
   $: loading = false;
 
@@ -56,7 +59,7 @@
         <h3 class="font-bold">{manga[0].mokuroData.title}</h3>
         <div class="flex flex-col gap-0 sm:flex-row sm:gap-5">
           <p>Volumes: {$mangaStats.completed} / {manga.length}</p>
-          <p>Characters read: {$mangaStats.chars}</p>
+          <p>Characters read: {$mangaStats.chars} / {totalMangaChars}</p>
           <p>Minutes read: {parseTime($mangaStats.timeReadInMinutes ?? 0)}</p>
         </div>
       </div>
